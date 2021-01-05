@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  app:
+    build: app
+    container_name: django-gunicorn
+    restart: always
+    env_file:
+      - django.env
+    command:
+      "pipenv run gunicorn --workers=2 --bind=0.0.0.0:8000 netease.wsgi"
+
+  nginx:
+    image: nginx:1.17
+    container_name: ngx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+
+  worker:
+    build: worker
+    container_name: worker
+    restart: always
+    env_file: 
+      - worker/.env
+    depends_on: 
+      - app
+      - nginx
