@@ -32,7 +32,7 @@ celery_app.conf.update(
 def signin():
     nginx_host = os.environ.get('NGINX')
     logging.info('nginx host:'  + nginx_host)
-    base_url = f'http://localhost/api/'
+    base_url = f'http://{nginx_host}/api/'
     resp = requests.get(base_url + 'user/status')
     if resp.status_code != 200:
         email = os.environ.get('MUSIC_EMAIL')
