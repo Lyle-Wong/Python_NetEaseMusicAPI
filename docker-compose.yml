@@ -12,7 +12,7 @@ services:
 
   nginx:
     image: nginx:1.17
-    container_name: ngx
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -32,20 +32,19 @@ services:
 
   stats:
     image: docker.io/bitnami/rabbitmq:3.8-debian-10
+    container_name: rabbitmq-stats
     environment:
       - RABBITMQ_NODE_TYPE=stats
       - RABBITMQ_NODE_NAME=rabbit@stats
       - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
     restart: always
     ports:
-      - '4369:4369'
-      - '5672:5672'
-      - '25672:25672'
       - '15672:15672'
     volumes:
       - 'rabbitmqstats_data:/bitnami'
   queue-disc1:
     image: docker.io/bitnami/rabbitmq:3.8-debian-10
+    container_name: rabbitmq-queue-disc1
     environment:
       - RABBITMQ_NODE_TYPE=queue-disc
       - RABBITMQ_NODE_NAME=rabbit@queue-disc1
@@ -56,6 +55,7 @@ services:
       - 'rabbitmqdisc1_data:/bitnami'
   queue-ram1:
     image: docker.io/bitnami/rabbitmq:3.8-debian-10
+    container_name: rabbitmq-queue-ram1
     environment:
       - RABBITMQ_NODE_TYPE=queue-ram
       - RABBITMQ_NODE_NAME=rabbit@queue-ram1
@@ -67,6 +67,7 @@ services:
 
   redis:
     image: 'bitnami/redis:6.0'
+    container_name: redis
     restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
