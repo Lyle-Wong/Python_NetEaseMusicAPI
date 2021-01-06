@@ -12,4 +12,4 @@ else
 fi
 
 # Start Gunicorn
-exec pipenv run gunicorn -w 4 --bind 0.0.0.0:80 -c "$GUNICORN_CONF" "$APP_MODULE"
+exec pipenv run gunicorn -w 4 -t 120 --bind 0.0.0.0:80 -c "$GUNICORN_CONF" "$APP_MODULE"

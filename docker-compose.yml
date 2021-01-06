@@ -8,7 +8,7 @@ services:
     env_file:
       - django.env
     command:
-      "pipenv run gunicorn --workers=2 --bind=0.0.0.0:8000 netease.wsgi"
+      "pipenv run gunicorn --workers=4  --timeout 120  --bind=0.0.0.0:8000 netease.wsgi"
 
   nginx:
     image: nginx:1.17
@@ -29,3 +29,53 @@ services:
     depends_on: 
       - app
       - nginx
+
+  stats:
+    image: docker.io/bitnami/rabbitmq:3.8-debian-10
+    environment:
+      - RABBITMQ_NODE_TYPE=stats
+      - RABBITMQ_NODE_NAME=rabbit@stats
+      - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
+    restart: always
+    ports:
+      - '4369:4369'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
+    volumes:
+      - 'rabbitmqstats_data:/bitnami'
+  queue-disc1:
+    image: docker.io/bitnami/rabbitmq:3.8-debian-10
+    environment:
+      - RABBITMQ_NODE_TYPE=queue-disc
+      - RABBITMQ_NODE_NAME=rabbit@queue-disc1
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbit@stats
+      - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
+    restart: always
+    volumes:
+      - 'rabbitmqdisc1_data:/bitnami'
+  queue-ram1:
+    image: docker.io/bitnami/rabbitmq:3.8-debian-10
+    environment:
+      - RABBITMQ_NODE_TYPE=queue-ram
+      - RABBITMQ_NODE_NAME=rabbit@queue-ram1
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbit@stats
+      - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
+    restart: always
+    volumes:
+      - 'rabbitmqram1_data:/bitnami'
+
+  redis:
+    image: 'bitnami/redis:6.0'
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+volumes:
+  rabbitmqstats_data:
+    driver: local
+  rabbitmqdisc1_data:
+    driver: local
+  rabbitmqram1_data:
+    driver: local
+
