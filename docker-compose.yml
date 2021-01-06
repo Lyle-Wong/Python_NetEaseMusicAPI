@@ -20,16 +20,6 @@ services:
     depends_on:
       - app
 
-  worker:
-    build: worker
-    container_name: worker
-    restart: always
-    env_file: 
-      - worker/.env
-    depends_on: 
-      - app
-      - nginx
-
   stats:
     image: docker.io/bitnami/rabbitmq:3.8-debian-10
     container_name: rabbitmq-stats
@@ -71,6 +61,18 @@ services:
     restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+
+  worker:
+    build: worker
+    container_name: worker
+    restart: always
+    env_file: 
+      - worker/.env
+    depends_on: 
+      - app
+      - nginx
+      - redis
+      - stats
 
 volumes:
   rabbitmqstats_data:
