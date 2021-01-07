@@ -36,7 +36,7 @@ beat_schedule={
         },
         "signin_task_3": {
             "task": "async_tasks.celery_tasks.signin",
-            "schedule": crontab(minute="*/1"),
+            "schedule": crontab(minute=0, hour="*/3"), 
             "args": ()
         }
     }
