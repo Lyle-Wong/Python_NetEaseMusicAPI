@@ -24,14 +24,19 @@ imports = [
 ]
 
 beat_schedule={
-        "signin_msg_1": {
-            "task": "celery_app.signin",
+        "signin_task_1": {
+            "task": "async_tasks.celery_tasks.signin",
             "schedule": crontab(minute=0, hour=7),
             "args": ()
         },
-        "signin_msg_2": {
-            "task": "celery_app.signin",
+        "signin_task_2": {
+            "task": "async_tasks.celery_tasks.signin",
             "schedule": crontab(minute=30, hour=18),
+            "args": ()
+        },
+        "signin_task_3": {
+            "task": "async_tasks.celery_tasks.signin",
+            "schedule": crontab(minute="*/1"),
             "args": ()
         }
     }
